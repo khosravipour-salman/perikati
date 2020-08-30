@@ -1,0 +1,350 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+{% if not is_popup and is_nav_sidebar_enabled %}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/nav_sidebar.css" %}">
+  <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
+{% endif %}
+{% block extrastyle %}{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+{% block extrahead %}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+
+    {% block css %}
+      <link href='{% static "app_base/css/bootstrap.min.css" %}' rel="stylesheet">
+      <link href='{% static "app_base/css/bootstrap.rtl.min.css" %}' rel="stylesheet">
+      <link href='{% static "app_base/font-awesome/css/font-awesome.css" %}' rel="stylesheet">
+      <!-- Toastr style -->
+      <link href='{% static "app_base/css/plugins/toastr/toastr.min.css" %}' rel="stylesheet">
+      <!-- Gritter -->
+      <link href='{% static "app_base/js/plugins/gritter/jquery.gritter.css" %}' rel="stylesheet">
+      <link href='{% static "app_base/css/animate.css" %}' rel="stylesheet">
+      <link href='{% static "app_base/css/style.rtl.css" %}' rel="stylesheet">
+
+      <link href='{% static "app_base/css/plugins/steps/jquery.steps.css" %}' rel="stylesheet">
+      <link href='{% static "app_base/css/plugins/persian-datepicker/persian-datepicker.min.css" %}' rel="stylesheet">
+
+    {% endblock css %}
+
+{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+{% load i18n %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+
+<!-- Container -->
+{% comment %}
+<div id="container">
+
+    {% if not is_popup %}
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
+        </div>
+        {% block usertools %}
+        {% if has_permission %}
+        <div id="user-tools">
+            {% block welcome-msg %}
+                {% translate 'Welcome,' %}
+                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+            {% endblock %}
+            {% block userlinks %}
+                {% if site_url %}
+                    <a href="{{ site_url }}">{% translate 'View site' %}</a> /
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% translate 'Documentation' %}</a> /
+                    {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
+                {% endif %}
+                <a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a>
+            {% endblock %}
+        </div>
+        {% endif %}
+        {% endblock %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
+
+    <div class="main shifted" id="main">
+      {% if not is_popup and is_nav_sidebar_enabled %}
+        {% block nav-sidebar %}
+          {% include "admin/nav_sidebar.html" %}
+        {% endblock %}
+      {% endif %}
+      <div class="content">
+        {% block messages %}
+          {% if messages %}
+            <ul class="messagelist">{% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}</ul>
+          {% endif %}
+        {% endblock messages %}
+        <!-- Content -->
+        <div id="content" class="{% block coltype %}colM{% endblock %}">
+          {% block pretitle %}{% endblock %}
+          {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+          {% block content %}
+            {% block object-tools %}{% endblock %}
+            {{ content }}
+          {% endblock %}
+          {% block sidebar %}{% endblock %}
+          <br class="clear">
+        </div>
+        <!-- END Content -->
+        {% block footer %}<div id="footer"></div>{% endblock %}
+      </div>
+    </div>
+</div>
+<!-- END Container -->
+{% endcomment %}
+
+  <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element"> <span>
+                                <img alt="image" class="img-circle" src={% static "app_base/img/profile_small.jpg" %} />
+                            </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">ایمان
+                                            عباسی</strong>
+                                    </span> <span class="text-muted text-xs block">مدیر هنری <b
+                                            class="caret"></b></span> </span> </a>
+                            <ul class="dropdown-menu animated fadeInLeft m-t-xs">
+                                <li><a href="profile.html">پروفایل</a></li>
+                                <li><a href="contacts.html">مخاطبین</a></li>
+                                <li><a href="mailbox.html">ایمیل</a></li>
+                                <li class="divider"></li>
+                                <li><a href="login.html">خروج</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            لوگو
+                        </div>
+                    </li>
+                    {% for app in APP_LIST %}
+                      <li {% if forloop.first %}class="active"{% endif %}>
+                        <a href="{{ app.app_url }}"><i class="fa fa-th-large"></i> <span class="nav-label">{{app.name}}</span></a>
+                      </li>
+                    {% endfor %}
+                      <li {% if forloop.first %}class="active"{% endif %}>
+                        <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">ثبت پیش فاکتور</span></a>
+                      </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i
+                                class="fa fa-bars"></i> </a>
+                        <form role="search" class="navbar-form-custom" action="search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="جستجو" class="form-control" name="top-search"
+                                    id="top-search">
+                            </div>
+                        </form>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-left" style="display: flex">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-messages">
+                                <li>
+                                    <div class="dropdown-messages-box">
+                                        <a href="profile.html" class="pull-right">
+                                            <img alt="image" class="img-circle"
+                                                src='{% static "app_base/img/a4.jpg" %}'>
+                                        </a>
+                                        <div class="media-body ">
+                                            <small class="pull-left text-navy">5 ساعت پیش</small>
+                                            <strong>ایمن</strong> لورم ایپسوم <strong>ایمن</strong>. <br>
+                                            <small class="text-muted">دیروز 1:21 ب.ظ - 1394/06/10</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="dropdown-messages-box">
+                                        <a href="profile.html" class="pull-right">
+                                            <img alt="image" class="img-circle"
+                                                src='{% static "app_base/img/a7.jpg" %}'>
+                                        </a>
+                                        <div class="media-body">
+                                            <small class="pull-left">46 ساعت پیش</small>
+                                            <strong>ایمان عباسی</strong> لورم ایپسوم <strong>ایمن</strong>. <br>
+                                            <small class="text-muted">3 روز پیش در 7:58 ب.ظ - 1394/06/10</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="dropdown-messages-box">
+                                        <a href="profile.html" class="pull-right">
+                                            <img alt="image" class="img-circle"
+                                                src='{% static "app_base/img/profile.jpg" %}'>
+                                        </a>
+                                        <div class="media-body ">
+                                            <small class="pull-left">23 ساعت پیش</small>
+                                            <strong>ایمان عباسی</strong> لورم ایپسوم <strong>ایمن</strong>. <br>
+                                            <small class="text-muted">2 وز پیش در 2:30 ق.ظ - 1394/06/10</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="text-center link-block">
+                                        <a href="mailbox.html">
+                                            <i class="fa fa-envelope"></i> <strong>مشاهده همه پیغام ها</strong>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-bell"></i> <span class="label label-primary">8</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts">
+                                <li>
+                                    <a href="mailbox.html">
+                                        <div>
+                                            <i class="fa fa-envelope fa-fw"></i> شما 16 پیغام دارید
+                                            <span class="pull-left text-muted small">4 دقیقه پیش</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="profile.html">
+                                        <div>
+                                            <i class="fa fa-twitter fa-fw"></i> 3 فالوور جدید
+                                            <span class="pull-left text-muted small">12 دقیقه پیش</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="grid_options.html">
+                                        <div>
+                                            <i class="fa fa-upload fa-fw"></i> سرور ری استارت شد
+                                            <span class="pull-left text-muted small">4 دقیقه پیش</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="text-center link-block">
+                                        <a href="notifications.html">
+                                            <strong>مشاهده همه هشدار ها</strong>
+                                            <i class="fa fa-angle-left fa-lg fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <li>
+                            <a href="login.html">
+                                <i class="fa fa-sign-out"></i> خروج
+                            </a>
+                        </li>
+                        <li>
+                            <a class="left-sidebar-toggle">
+                                <i class="fa fa-tasks"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="row border-bottom ">
+                <div class="col-sm-12" style="min-height: 70vh">
+                    {% block content %}
+                      {% block object-tools %}{% endblock %}
+                      {{ content }}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% block js %}
+  <!-- Mainly scripts -->
+  <script src='{% static "app_base/js/jquery-2.1.1.js" %}'></script>
+  <script src='{% static "app_base/js/bootstrap.min.js" %}'></script>
+  <script src='{% static "app_base/js/plugins/metisMenu/jquery.metisMenu.js" %}'></script>
+  <script src='{% static "app_base/js/plugins/slimscroll/jquery.slimscroll.min.js" %}'></script>
+
+  <!-- Flot -->
+  <script src='{% static "app_base/js/plugins/flot/jquery.flot.js" %}'></script>
+  <script src='{% static "app_base/js/plugins/flot/jquery.flot.tooltip.min.js" %}'></script>
+  <script src='{% static "app_base/js/plugins/flot/jquery.flot.spline.js" %}'></script>
+  <script src='{% static "app_base/js/plugins/flot/jquery.flot.resize.js" %}'></script>
+  <script src='{% static "app_base/js/plugins/flot/jquery.flot.pie.js" %}'></script>
+
+  <!-- Peity -->
+  <script src='{% static "app_base/js/plugins/peity/jquery.peity.min.js" %}'></script>
+  <script src='{% static "app_base/js/demo/peity-demo.js" %}'></script>
+
+  <!-- Custom and plugin javascript -->
+  <script src='{% static "app_base/js/rada.js" %}'></script>
+  <script src='{% static "app_base/js/plugins/pace/pace.min.js" %}'></script>
+
+  <!-- jQuery UI -->
+  <script src='{% static "app_base/js/plugins/jquery-ui/jquery-ui.min.js" %}'></script>
+
+  <!-- GITTER -->
+  <script src='{% static "app_base/js/plugins/gritter/jquery.gritter.min.js" %}'></script>
+
+  <!-- Sparkline -->
+  <script src='{% static "app_base/js/plugins/sparkline/jquery.sparkline.min.js" %}'></script>
+
+  <!-- Sparkline demo data  -->
+  <script src='{% static "app_base/js/demo/sparkline-demo.js" %}'></script>
+
+  <!-- ChartJS-->
+  <script src='{% static "app_base/js/plugins/chartJs/Chart.min.js" %}'></script>
+
+  <!-- Toastr -->
+  <script src='{% static "app_base/js/plugins/toastr/toastr.min.js" %}'></script>
+
+  <!-- Steps -->
+  <!-- <script src='{% static "app_base/js/plugins/staps/jquery.steps.min.js" %}'></script> -->
+  <script src='{% static "app_base/js/jquery.steps.min.js" %}'></script>
+  <!-- plugins/staps/jquery.steps.min.js -->
+  <!-- Jquery Validate -->
+  <script src='{% static "app_base/js/plugins/validate/jquery.validate.min.js" %}'></script>
+      
+  <!-- Data picker -->
+  <script src='{% static "app_base/js/plugins/persian-datepicker/persian-date.js" %}'/></script>
+  <script src='{% static "app_base/js/plugins/persian-datepicker/persian-datepicker.min.js" %}'></script>
+{% endblock js %}
+
+</body>
+</html>

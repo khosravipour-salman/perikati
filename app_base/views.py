@@ -7,7 +7,7 @@ from .city_list import city_list
 
 
 def index(request):
-    flag = False
+    flag = 2
     if request.method == 'POST':  # Create mode
         # Products data getting ready to save to model
         products = {}
@@ -31,7 +31,7 @@ def index(request):
                     continue
                 if value:
                     customer_information.update({key: value})
-            flag = True
+            flag = 2
         # set flag for startindex in fieldset for step jquery
         #
 
@@ -56,6 +56,7 @@ def index(request):
     context = {
         # 'form': form,
         # 'section': 'index',
+        'flag': flag,
         'products': PRODUCTS,
         'city_list': city_list,
     }

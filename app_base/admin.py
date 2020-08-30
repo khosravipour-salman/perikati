@@ -1,6 +1,8 @@
 # from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
+from app_base.custom_admin import admin_site
 from django.contrib import admin
 from .models import Product, ProductList, TestModel
+from django.contrib.auth.models import User, Group
 
 
 class ProductInline(admin.StackedInline):
@@ -12,9 +14,10 @@ class ProductListAdmin(admin.ModelAdmin):
     inlines = (ProductInline,)
 
 
-admin.site.register(Product)
-admin.site.register(ProductList, ProductListAdmin)
-
+admin_site.register(Product)
+admin_site.register(ProductList, ProductListAdmin)
+admin_site.register(User)
+admin_site.register(Group)
 
 
 

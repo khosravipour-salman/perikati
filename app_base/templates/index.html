@@ -49,11 +49,13 @@
                         </div>
                     </li>
                     <li class="active">
-                        <a href="index-2.html"><i class="fa fa-th-large"></i> <span class="nav-label">مدیریت
-                                کاربران</span></a>
+                        <a href="{% url 'admin:app_list' app_label='auth' %}"><i class="fa fa-th-large"></i> <span class="nav-label">مدیریت کاربران</span></a>
                     </li>
                     <li>
-                        <a href="index-2.html"><i class="fa fa-th-large"></i> <span class="nav-label">محصولات</span></a>
+                        <a href="{% url 'admin:app_list' app_label='app_base' %}"><i class="fa fa-th-large"></i> <span class="nav-label">محصولات</span></a>
+                    </li>
+                    <li {% if forloop.first %}class="active"{% endif %}>
+                        <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">ثبت پیش فاکتور</span></a>
                     </li>
                 </ul>
             </div>
@@ -72,9 +74,6 @@
                         </form>
                     </div>
                     <ul class="nav navbar-top-links navbar-left" style="display: flex">
-                        <li>
-                            <span class="m-r-sm text-muted welcome-message">به بخش مدیریت خوش آمدید</span>
-                        </li>
                         <li class="dropdown">
                             <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                                 <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
@@ -190,7 +189,6 @@
             </div>
             <div class="row border-bottom ">
                 <div class="col-sm-12" style="min-height: 70vh">
-                    <h2>خوش آمدید {{ request.user.username }}</h2>
                     <div class="ibox">
                         <div class="ibox-title">
                             <h5>Wizard with Validation</h5>
@@ -1053,7 +1051,7 @@
             // startindex
             $("#form").steps({
                 bodyTag: "fieldset",
-                startIndex: 0{% if flag %}2{% endif %},
+                startIndex: {{ flag }},
                 onStepChanging: function (event, currentIndex, newIndex) {
                     // Always allow going backward even if the current step contains invalid fields!
                     if (currentIndex > newIndex) {
