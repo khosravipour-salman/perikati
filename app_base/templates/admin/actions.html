@@ -1,13 +1,35 @@
+<head>
+  <style>
+    .input_height_class {
+      display: inline-block;
+      height: 30px;
+      width: 200px;
+    }
+    .input_height_class input[select]{
+      height: 100px;
+    }
+  </style>
+</head>
 {% load i18n widget_tweaks %}
 <div class="actions">
   {% block actions %}
     {% block actions-form %}
     {% for field in action_form %}
-        {% if field.label %}<label>{{ field.label }} {% endif %} {%render_field field class+="form-control m-b" %}{% if field.label %}</label>{% endif %}
-    {% endfor %}
-    {% endblock %}
-    {% block actions-submit %}
-    <button type="submit" class="btn btn-info" title="{% translate "Run the selected action" %}" name="index" value="{{ action_index|default:0 }}">{% translate "Go" %}</button>
+
+        {% if field.label %}
+        <label style="font-size: 15px;">{{ field.label }}
+        {% endif %}
+
+        {%render_field field class+="form-control m-b input_height_class" %}
+
+        {% if field.label %}
+        </label>
+        {% endif %}
+        
+        {% endfor %}
+        {% block actions-submit %}
+        <button type="submit" class="btn btn-info" title="{% translate "Run the selected action" %}" name="index" value="{{ action_index|default:0 }}">{% translate "Go" %}</button>
+        {% endblock %}
     {% endblock %}
     {% block actions-counter %}
     {% if actions_selection_counter %}

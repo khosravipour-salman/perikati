@@ -33,9 +33,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'app_base',
-    'jalali_date',
     'widget_tweaks',
     'django.contrib.admin',
+    'django_jalali',
     # 'django.contrib.auth',
     'perikati.authconfig.CustomAuthConfig',
     'django.contrib.contenttypes',
@@ -119,6 +119,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+import locale
+locale.setlocale(locale.LC_ALL, "fa_IR.UTF-8")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -136,7 +138,7 @@ JALALI_DATE_DEFAULTS = {
     'Static': {
         'js': [
             # loading datepicker
-            'admin/js/django_jalali.min.js',
+            'templates/admin/js/django_jalali.min.js',
             # OR
             # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js',
             # 'admin/jquery.ui.datepicker.jalali/scripts/calendar.js',
@@ -146,7 +148,7 @@ JALALI_DATE_DEFAULTS = {
         ],
         'css': {
             'all': [
-                'admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css',
+                'templates/admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css',
             ]
         }
     },

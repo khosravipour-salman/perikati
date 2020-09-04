@@ -1,6 +1,6 @@
 # 'authconfig.py'
-from django.apps import AppConfig
+from django.contrib.auth.apps import AuthConfig
 
-class CustomAuthConfig(AppConfig):
+class CustomAuthConfig(AuthConfig):
     name = 'django.contrib.auth'
     verbose_name = 'مدیریت کاربران'

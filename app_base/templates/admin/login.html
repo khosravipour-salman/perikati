@@ -43,15 +43,18 @@
 </p>
 {% endif %}
 
-<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
-  <div class="form-row">
+<form action="{{ app_path }}" method="post" id="login-form" style="width: 100%;">{% csrf_token %}
+  <div class="form-row" style="width: 46%; margin-left: 100px;"">
     {{ form.username.errors }}
     {{ form.username.label_tag }} {{ form.username }}
   </div>
-  <div class="form-row">
+  <div class="form-row"  style="width: 46%;">
     {{ form.password.errors }}
     {{ form.password.label_tag }} {{ form.password }}
     <input type="hidden" name="next" value="{{ next }}">
+    <div class="submit-row">
+      <input type="submit" value="{% translate 'Log in' %}" style="color: white; background-color: #1ab394; width: 20%;">
+    </div>
   </div>
   {% url 'admin_password_reset' as password_reset_url %}
   {% if password_reset_url %}
@@ -59,9 +62,9 @@
     <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
   </div>
   {% endif %}
-  <div class="submit-row">
-    <input type="submit" value="{% translate 'Log in' %}">
-  </div>
+  <!-- <div class="submit-row">
+    <input type="submit" value="{% translate 'Log in' %}" style="color: white; background-color: #1ab394; width: 15%;">
+  </div> -->
 </form>
 
 </div>
